@@ -1,0 +1,29 @@
+FROM nvidia/cuda
+LABEL release-data='2018-07-24'
+LABEL vendor='JINLO'
+RUN apt-get update \
+      && apt-get -y upgrade \
+      && apt-get install -y lrzsz vim git python3-pip wget \
+      && pip3 install --upgrade pip \
+      && sed -i 's/import main/import __main__/g' /usr/bin/pip3 \
+      && sed -i 's/main()/__main__._main()/g' /usr/bin/pip3 \
+      && echo [PIP3 setup successfully] \ 
+      && mkdir -p /cudnn \
+      && cd /cudnn \
+      && wget https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/libcudnn7_7.1.4.18-1+cuda9.0_amd64.deb \
+      && dpkg -i /cudnn/libcudnn7_7.1.4.18-1+cuda9.0_amd64.deb \
+      && echo [CUDA setup successfully] \
+      && sed -i -e "\$a#git completion" ~/.bashrc \
+      && sed -i -e "\$asource /usr/share/bash-completion/completions/git" ~/.bashrc \
+      && sed -i -e "\$agit config --global alias.ci commit" ~/.bashrc \
+      && sed -i -e "\$agit config --global alias.co checkout" ~/.bashrc \
+      && sed -i -e "\$agit config --global alias.st status" ~/.bashrc \
+      && sed -i -e "\$agit config --global alias.br branch" ~/.bashrc \
+      && echo [Append git completion to ~/.bashrc successfully] \
+      && pip3 install --upgrade tensorflow-gpu \ 
+      && echo [Tensorflow-GPU setup successfully] \ 
+      && mkdir /workspace \
+      && cd /workspace \
+      && git clone https://github.com/iamlotus/facial-landmark.git
+
+RUN /bin/bash -c "source ~/.bashrc"
