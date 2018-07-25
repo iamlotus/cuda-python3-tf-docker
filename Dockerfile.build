@@ -3,11 +3,13 @@ LABEL release-data='2018-07-24'
 LABEL vendor='JINLO'
 RUN apt-get update \
       && apt-get -y upgrade \
-      && apt-get install -y lrzsz vim git python3-pip wget \
+      && apt-get install -y lrzsz vim git python3-pip libgtk2.0-dev wget \
       && pip3 install --upgrade pip \
       && sed -i 's/import main/import __main__/g' /usr/bin/pip3 \
       && sed -i 's/main()/__main__._main()/g' /usr/bin/pip3 \
       && echo [PIP3 setup successfully] \ 
+      && pip3 install --upgrade opencv-python \ 
+      && echo [OpenCV setup successfully] \ 
       && mkdir -p /cudnn \
       && cd /cudnn \
       && wget https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1604/x86_64/libcudnn7_7.1.4.18-1+cuda9.0_amd64.deb \
@@ -24,6 +26,8 @@ RUN apt-get update \
       && echo [Tensorflow-GPU setup successfully] \ 
       && mkdir /workspace \
       && cd /workspace \
-      && git clone https://github.com/iamlotus/facial-landmark.git
+      && git clone https://github.com/iamlotus/facial-landmark.git \
+      && mkdir -p logs \
+      && echo [Done]
 
 RUN /bin/bash -c "source ~/.bashrc"
