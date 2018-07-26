@@ -22,7 +22,7 @@ RUN apt-get update \
       && mkdir /workspace \
       && cd /workspace \
       && git clone https://github.com/iamlotus/facial-landmark.git \
-      && mkdir -p logs \
+      && mkdir -p /workspace/logs \
       && echo [Done]
 
 RUN   sed -i -e "\$a#git completion" ~/.bashrc \
