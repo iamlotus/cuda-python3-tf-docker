@@ -10,6 +10,8 @@ RUN apt-get update \
       && sed -i 's/import main/import __main__/g' /usr/bin/pip3 \
       && sed -i 's/main()/__main__._main()/g' /usr/bin/pip3 \
       && echo [PIP3 setup successfully] \ 
+      && pip3 install --upgrade cmake face_recognition \ 
+      && echo [face_recognition setup successfully] \ 
       && pip3 install --upgrade opencv-python \ 
       && echo [OpenCV setup successfully] \ 
       && mkdir -p /cudnn \
