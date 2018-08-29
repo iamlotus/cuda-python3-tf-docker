@@ -5,7 +5,7 @@ LABEL vendor='JINLO'
 # install busybox to enable busybox tail -f, see https://serverfault.com/questions/661454/tail-f-not-following-log-file-in-docker-container
 RUN apt-get update \
       && apt-get -y upgrade \
-      && apt-get install -y lrzsz vim git python3-pip libgtk2.0-dev wget  busybox \
+      && apt-get install -y lrzsz vim git python3-pip libgtk2.0-dev wget busybox locales\
       && pip3 install --upgrade pip \
       && sed -i 's/import main/import __main__/g' /usr/bin/pip3 \
       && sed -i 's/main()/__main__._main()/g' /usr/bin/pip3 \
@@ -21,10 +21,14 @@ RUN apt-get update \
       && echo [CUDA setup successfully] \
       && pip3 install --upgrade tensorflow-gpu \ 
       && echo [Tensorflow-GPU setup successfully] \ 
+      && locale-gen en_US.UTF-8 \
+      && echo [Chinese support successfully] \ 
       && mkdir /workspace \
       && cd /workspace \
-      && git clone https://github.com/iamlotus/facial-landmark.git \
+      && git clone git://github.com/iamlotus/facial-landmark.git \
+      && git clone git://github.com/iamlotus/rnn.git \
       && mkdir -p /workspace/logs \
+      && mkdir -p /workspace/rnn/logs \
       && echo [Done]
 
 RUN   sed -i -e "\$a#git completion" ~/.bashrc \
@@ -35,6 +39,7 @@ RUN   sed -i -e "\$a#git completion" ~/.bashrc \
       && sed -i -e "\$agit config --global alias.br branch" ~/.bashrc \
       && sed -i -e "\$a#alias" ~/.bashrc \
       && sed -i -e "\$aalias tail=\"busybox tail\"" ~/.bashrc \
+      && sed -i -e "\$aexport LC_ALL=\"en_US.UTF-8\"" ~/.bashrc \
       && echo [~/.bashrc setup succussfully]
   
 RUN /bin/bash -c "source ~/.bashrc"
